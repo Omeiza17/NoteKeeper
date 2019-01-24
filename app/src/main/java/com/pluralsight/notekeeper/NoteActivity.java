@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
@@ -13,6 +14,7 @@ import android.widget.Spinner;
 import java.util.List;
 
 public class NoteActivity extends AppCompatActivity {
+  private final String TAG = getClass().getSimpleName();
   public static final String NOTE_POSITION = "com.pluralsight.notekeeper.NOTE_POSITION";
   public static final String ORIGINAL_NOTE_COURSE_ID = "com.pluralsight.notekeeper.ORIGINAL_NOTE_COURSE_ID";
   public static final String ORIGINAL_NOTE_TITLE = "com.pluralsight.notekeeper.ORIGINAL_NOTE_TITLE";
@@ -56,6 +58,8 @@ public class NoteActivity extends AppCompatActivity {
 
     if (!mIsNewNote)
       displayNote(mSpinnerCourses, mTextNoteTitle, mTextNoteText);
+
+    Log.d(TAG, "onCreate");
   }
 
   private void restoreOriginalNoteValues(Bundle savedInstanceState) {
@@ -76,6 +80,7 @@ public class NoteActivity extends AppCompatActivity {
   protected void onPause() {
     super.onPause();
     if (mIsCancelling) {
+      Log.i(TAG, String.format("Cancelling note at position: %d", mNotePosition));
       if (mIsNewNote) {
         DataManager.getInstance().removeNote(mNotePosition);
       } else {
@@ -84,6 +89,7 @@ public class NoteActivity extends AppCompatActivity {
     } else {
       saveNote();
     }
+    Log.d(TAG, "onPause");
   }
 
   private void storePreviousNoteValues() {
@@ -122,6 +128,7 @@ public class NoteActivity extends AppCompatActivity {
     if (mIsNewNote) {
       createNewNote();
     } else {
+      Log.i(TAG, String.format("mNotePosition: %d", mNotePosition));
       mNote = DataManager.getInstance().getNotes().get(position);
     }
   }
